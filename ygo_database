@@ -1,0 +1,40 @@
+#!/bin/bash
+usage() {
+  echo "This script doesn't accept parameters"
+  echo "Usage example: $0"
+  exit 1
+}
+
+header() {
+  clear
+  echo "###########################################"
+  echo "#####     Yu-Gi-Oh! Card Database     #####"
+  echo "###########################################"
+  echo "###  Creator: kuroi kenryu              ###"
+  echo "###########################################"
+}
+
+main_options() {
+  echo "## 1) Search Card                        ##"
+  echo "## 0) Quit                               ##"
+  echo "###########################################"
+}
+
+read_option() {
+  echo -e "\nEnter option number: " >&2
+  read option
+  echo $option
+}
+
+## Check correct command usage
+if [ $# != 0 ]; then
+  usage
+fi
+
+option=999
+## Main Menu
+while [ "$option" != "0" ]; do
+  header
+  main_options
+  option=$( read_option )
+done
