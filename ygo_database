@@ -5,19 +5,41 @@ usage() {
   exit 1
 }
 
-header() {
+print_header() {
   clear
-  echo "###########################################"
+  print_separator
   echo "#####     Yu-Gi-Oh! Card Database     #####"
-  echo "###########################################"
+  print_separator
   echo "###  Creator: kuroi kenryu              ###"
+  print_separator
+}
+
+print_option() {
+  echo "## $1) $2"
+}
+
+print_separator() {
   echo "###########################################"
 }
 
-main_options() {
-  echo "## 1) Search Card                        ##"
-  echo "## 0) Quit                               ##"
-  echo "###########################################"
+main_menu() {
+  print_header
+  print_option 1 "Search Card"
+  print_option 0 "Quit"
+  print_separator
+}
+
+search_card_menu() {
+  print_header
+  print_option 1 "Filter by Name"
+  print_option 2 "Filter by Type"
+  print_option 3 "Filter by ID"
+  print_option 4 "Filter by Level"
+  print_option 5 "Filter by Attack"
+  print_option 6 "Filter by Defense"
+  print_option 7 "Filter by Attribute"
+  print_option 0 "Back"
+  print_separator
 }
 
 read_option() {
@@ -34,7 +56,13 @@ fi
 option=999
 ## Main Menu
 while [ "$option" != "0" ]; do
-  header
-  main_options
+  main_menu
   option=$( read_option )
+  suboption=999
+  if [ "$option" == "1" ]; then
+    while [ "$suboption" != 0 ]; do 
+      search_card_menu
+      suboption=$( read_option )
+    done
+  fi
 done
