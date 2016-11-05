@@ -42,6 +42,44 @@ search_card_menu() {
   print_separator
 }
 
+card_filter_name() {
+  print_header
+  echo "Enter the name of the card:"
+}
+
+card_filter_results() {
+  print_header
+  print_option 0 "Back"
+  print_separator
+}
+
+filter_monsters_name() {
+  if [ -e $monster_file ]; then
+    echo $( grep -i "^.*;.*;$1;.*;.*;.*;.*;.*;.*;.*$" $monster_file )
+  else
+    echo "$monster_file doesn't exist" >&2
+    echo ""
+  fi
+}
+
+filter_magics_name() {
+  if [ -e $magic_file ]; then
+    echo $( grep -i "^.*;.*;$1;.*;.*;.*;.*;.*;.*;.*$" $magic_file )
+  else
+    echo "$magic_file doesn't exist" >&2
+    echo ""
+  fi
+}
+
+filter_traps_name() {
+  if [ -e $trap_file ]; then
+    echo $( grep -i "^.*;.*;$1;.*;.*;.*;.*;.*;.*;.*$" $trap_file )
+  else
+    echo "$trap_file doesn't exist" >&2
+    echo ""
+  fi
+}
+
 read_option() {
   echo -e "\nEnter option number: " >&2
   read option
@@ -53,16 +91,48 @@ if [ $# != 0 ]; then
   usage
 fi
 
+###################
+##   Main Loop   ##
+###################
+data_dir="data/"
+monster_data="monster_cards.dat"
+magic_data="magic_cards.dat"
+trap_data="trap_cards.dat"
+monster_file=$data_dir$monster_data
+magic_file=$data_dir$magic_data
+trap_file=$data_dir$trap_data
 option=999
 ## Main Menu
 while [ "$option" != "0" ]; do
   main_menu
   option=$( read_option )
-  suboption=999
+  s1_option=999
   if [ "$option" == "1" ]; then
-    while [ "$suboption" != 0 ]; do 
+    ## Submenu 1
+    while [ "$s1_option" != "0" ]; do 
       search_card_menu
-      suboption=$( read_option )
+      s1_option=$( read_option )
+      s2_option=999
+      ## Submenu 2
+      if [ "$s1_option" == 1 ]; then
+	while [ "$s2_option" != "0" ]; do
+	  card_filter_name
+	  read card_name
+	  monster_matches=$( filter_monsters_name "$card_name" )
+	  magic_matches=$( filter_magics_name "$card_name" )
+	  trap_matches=$( filter_traps_name "$card_name" )
+	  total_matches=$monster_matches$magic_matches$trap_matches
+	  if [ "$total_matches" == "" ]; then
+	    echo "No matches found for card $card_name"
+	    echo "Press enter key to return to menu"
+	    read enter_key
+	    s2_option=0
+	  else
+	    read enter_key
+	    #card_filter_results
+	  fi
+	done
+      fi
     done
   fi
 done
