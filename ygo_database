@@ -22,6 +22,10 @@ print_separator() {
   echo "###########################################"
 }
 
+print_page_number() {
+  echo "                 $1 / $2 "
+}
+
 main_menu() {
   print_header
   print_option 1 "Search Card"
@@ -45,12 +49,6 @@ search_card_menu() {
 card_filter_name() {
   print_header
   echo "Enter the name of the card:"
-}
-
-card_filter_results() {
-  print_header
-  print_option 0 "Back"
-  print_separator
 }
 
 filter_monsters_name() {
@@ -86,6 +84,69 @@ read_option() {
   echo $option
 }
 
+card_filter_results() {
+  local data=$1
+  local results=$( echo "$data" | grep -o '\$' | wc -l )
+  local current_page
+  if [ $# != 2 ]; then
+    current_page=1
+  else
+    current_page=$2
+  fi
+  local option=999
+  while [ "$option" != "0" ]; do
+    local page_result=$( echo "$data" | cut -f $current_page -d '$' )
+    local card_id=$( echo "$page_result" | cut -f 1 -d ';' | xargs ) 
+    local card_code=$( echo "$page_result" | cut -f 2 -d ';' ) 
+    local card_name=$( echo "$page_result" | cut -f 3 -d ';' ) 
+    local card_level=$( echo "$page_result" | cut -f 4 -d ';' ) 
+    local card_attribute=$( echo "$page_result" | cut -f 5 -d ';' ) 
+    local card_type=$( echo "$page_result" | cut -f 6 -d ';' ) 
+    local card_description=$( echo "$page_result" | cut -f 7 -d ';' ) 
+    local card_attack=$( echo "$page_result" | cut -f 8 -d ';' ) 
+    local card_defense=$( echo "$page_result" | cut -f 9 -d ';' ) 
+    local card_meta=$( echo "$page_result" | cut -f 10 -d ';' ) 
+    local card_file=$data_dir$card_id"_"$card_code".png"
+
+    print_header
+    echo "## ID: $card_id"
+    echo "## Code: $card_code"
+    echo "## Card Type: $card_meta"
+    echo "## Name: $card_name"
+    echo "## Level: $card_level"
+    echo "## Attribute: $card_attribute"
+    echo "## Type: $card_type"
+    echo "## Attack: $card_attack"
+    echo "## Defense: $card_defense"
+    echo "## Description: $card_description"
+    echo "##"
+    print_option 1 "Preview Card"
+    if [ $current_page -lt $results ]; then
+      print_option 2 "Next Card"
+    fi
+    if [ $current_page -gt 1 ]; then
+      print_option 3 "Previous Card"
+    fi
+    print_option 0 "Back"
+    print_separator
+    print_page_number $current_page $results
+    option=$( read_option )
+    if [ "$option" == "1" ]; then
+      xdg-open "$card_file"
+    fi
+    if [ "$option" == "2" ]; then
+      current_page=$( echo "$current_page + 1 " | bc )
+      card_filter_results "$data" $current_page
+      option=0
+    fi
+    if [ "$option" == "3" ]; then
+      current_page=$( echo "$current_page - 1 " | bc )
+      card_filter_results "$data" $current_page
+      option=0
+    fi
+  done
+}
+
 ## Check correct command usage
 if [ $# != 0 ]; then
   usage
@@ -112,26 +173,21 @@ while [ "$option" != "0" ]; do
     while [ "$s1_option" != "0" ]; do 
       search_card_menu
       s1_option=$( read_option )
-      s2_option=999
       ## Submenu 2
       if [ "$s1_option" == 1 ]; then
-	while [ "$s2_option" != "0" ]; do
-	  card_filter_name
-	  read card_name
-	  monster_matches=$( filter_monsters_name "$card_name" )
-	  magic_matches=$( filter_magics_name "$card_name" )
-	  trap_matches=$( filter_traps_name "$card_name" )
-	  total_matches=$monster_matches$magic_matches$trap_matches
-	  if [ "$total_matches" == "" ]; then
-	    echo "No matches found for card $card_name"
-	    echo "Press enter key to return to menu"
-	    read enter_key
-	    s2_option=0
-	  else
-	    read enter_key
-	    #card_filter_results
-	  fi
-	done
+	card_filter_name
+	read card_name
+	monster_matches=$( filter_monsters_name "$card_name" )
+	magic_matches=$( filter_magics_name "$card_name" )
+	trap_matches=$( filter_traps_name "$card_name" )
+	total_matches=$monster_matches$magic_matches$trap_matches
+	if [ "$total_matches" == "" ]; then
+	  echo "No matches found for card $card_name"
+	  echo "Press enter key to return to menu"
+	  read enter_key
+	else
+	  card_filter_results "$total_matches"
+	fi
       fi
     done
   fi
