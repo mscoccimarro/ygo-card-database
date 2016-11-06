@@ -36,24 +36,34 @@ main_menu() {
 search_card_menu() {
   print_header
   print_option 1 "Filter by Name"
-  print_option 2 "Filter by Type"
-  print_option 3 "Filter by ID"
-  print_option 4 "Filter by Level"
-  print_option 5 "Filter by Attack"
-  print_option 6 "Filter by Defense"
-  print_option 7 "Filter by Attribute"
+  print_option 2 "Filter by Card Type"
+  print_option 3 "Filter by Type"
+  print_option 4 "Filter by ID"
+  print_option 5 "Filter by Level"
+  print_option 6 "Filter by Attack"
+  print_option 7 "Filter by Defense"
+  print_option 8 "Filter by Attribute"
   print_option 0 "Back"
   print_separator
 }
 
-card_filter_name() {
+card_filter_prompt() {
   print_header
-  echo "Enter the name of the card:"
+  echo "Enter the $1 of the card:"
 }
 
 filter_name() {
   if [ -e $data_file ]; then
     echo $( grep -i "^.*;.*;$1;.*;.*;.*;.*;.*;.*;.*$" $data_file )
+  else
+    echo "$data_file doesn't exist" >&2
+    echo ""
+  fi
+}
+
+filter_type() {
+  if [ -e $data_file ]; then
+    echo $( grep -i "^.*;.*;.*;.*;.*;$1;.*;.*;.*;.*$" $data_file )
   else
     echo "$data_file doesn't exist" >&2
     echo ""
@@ -152,12 +162,26 @@ while [ "$option" != "0" ]; do
       search_card_menu
       s1_option=$( read_option )
       ## Submenu 2
+      ## Name filter
       if [ "$s1_option" == 1 ]; then
-	card_filter_name
+	card_filter_prompt "name"
 	read card_name
 	matches=$( filter_name "$card_name" )
 	if [ "$matches" == "" ]; then
 	  echo "No matches found for card $card_name"
+	  echo "Press enter key to return to menu"
+	  read enter_key
+	else
+	  card_filter_results "$matches"
+	fi
+      fi
+      ## Type filter
+      if [ "$s1_option" == 3 ]; then
+	card_filter_prompt "type"
+	read card_type
+	matches=$( filter_type "$card_type" )
+	if [ "$matches" == "" ]; then
+	  echo "No matches found for type $card_type"
 	  echo "Press enter key to return to menu"
 	  read enter_key
 	else
