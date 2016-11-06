@@ -1,4 +1,4 @@
 id;code;name;level;attribute;type;description;atk;def;card-type
-46986414;LDK2-ENY10;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal
-46986414;SDMY-EN010;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal
-46986414;SJMP-JP002;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal
+46986414;LDK2-ENY10;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal Monster$
+46986414;SDMY-EN010;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal Monster$
+46986414;SJMP-JP002;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal Monster$
