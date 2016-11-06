@@ -118,7 +118,8 @@ card_filter_results() {
     echo "## Type: $card_type"
     echo "## Attack: $card_attack"
     echo "## Defense: $card_defense"
-    echo "## Description: $card_description"
+    printable_cd=$( echo "$card_description" | sed 's/\\n/\\n## /g' )
+    echo -e "## Description: $printable_cd"
     echo "##"
     print_option 1 "Preview Card"
     if [ $current_page -lt $results ]; then
