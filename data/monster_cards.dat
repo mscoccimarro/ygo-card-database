@@ -2,3 +2,4 @@ id;code;name;level;attribute;type;description;atk;def;card-type
 46986414;LDK2-ENY10;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal Monster$
 46986414;SDMY-EN010;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal Monster$
 46986414;SJMP-JP002;Dark Magician;7;Dark;Spellcaster;The ultimate wizard in terms of attack and defense.;2500;2100;Normal Monster$
+09287078;YGLD-ENB00;Dark Renewal;N/A;N/A;N/A;When your oponent Normal or Special Summons a monster(s):\nTarget 1 of those monsters and 1 Spellcaster-Type monster you\ncontrol, send both monsters to the Graveyard, then you can\nSpecial Summon 1 DARK Spellcaster-Type monster from your Deck\nor Graveyard.;N/A;N/A;Normal Trap$
